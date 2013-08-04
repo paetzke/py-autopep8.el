@@ -3,7 +3,7 @@ py-autopep8.el
 
 Copyright (C) 2013, Friedrich Paetzke <f.paetzke@gmail.com>
 
-py-autopep8.el integrates autopep8 with emacs
+py-autopep8.el integrates autopep8 into emacs
 
 1. install autopep8
 
