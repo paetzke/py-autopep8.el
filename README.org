@@ -1,0 +1,25 @@
+* py-autopep8.el
+
+Copyright (c) 2013-2014, Friedrich Paetzke (f.paetzke@gmail.com)
+All rights reserved.
+
+py-autopep8.el integrates autopep8 into Emacs.
+
+Install autopep8 and download py-autopep8.el
+
+#+BEGIN_SRC bash
+$ pip install autopep8
+$ wget https://raw.github.com/paetzke/py-autopep8.el/master/py-autopep8.el -O /your/path/py-autopep8.el
+#+END_SRC
+
+Add the before-save-hook to your ~/.emacs
+
+#+BEGIN_SRC lisp
+(add-to-list 'load-path "/your/path/")
+(require 'py-autopep8)
+(add-hook 'before-save-hook 'python-fmt-before-save)
+#+END_SRC
+
+Now every time you save your Python file autopep8 will be executed on the current buffer.
+
+[[https://bitdeli.com/free][https://d2weczhvl823v0.cloudfront.net/paetzke/py-autopep8.el/trend.png]]
