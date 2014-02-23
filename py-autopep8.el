@@ -1,7 +1,22 @@
-;; py-autopep8.el
-;;
-;; Copyright (C) 2013, Friedrich Paetzke <f.paetzke@gmail.com>
+;;; py-autopep8.el --- Use autopep8 to beautify a Python buffer
 
+;; Copyright (C) 2013-2014, Friedrich Paetzke <f.paetzke@gmail.com>
+
+;; Author: Friedrich Paetzke <f.paetzke@gmail.com>
+;; URL: https://github.com/paetzke/py-autopep8.el
+;; Version: 0.1
+
+;;; Commentary:
+
+;; Provides the `py-autopep8' command, which uses the external "autopep8"
+;; tool to tidy up the current buffer according to Python's PEP8.
+
+;; To automatically apply when saving a python file, use the
+;; following code:
+
+;;   (add-hook 'before-save-hook 'python-isort-before-save)
+
+;;; Code:
 
 (defun py-autopep8-apply-rcs-patch (patch-buffer)
   "Apply an RCS-formatted diff from PATCH-BUFFER to the current buffer."
@@ -47,6 +62,7 @@
               (error "invalid rcs patch or internal error in py-autopep8-apply-rcs-patch")))))))))
 
 
+;;;###autoload
 (defun py-autopep8 ()
   "Formats the current buffer according to the autopep8 tool."
   (interactive)
@@ -74,9 +90,13 @@
     (delete-file tmpfile)))
 
 
+;;;###autoload
 (defun py-autopep8-before-save ()
   (interactive)
   (when (eq major-mode 'python-mode) (py-autopep8)))
 
 
 (provide 'py-autopep8)
+
+
+;;; py-autopep8.el ends here
