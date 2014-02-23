@@ -1,9 +1,24 @@
-;; py-autopep8.el
-;;
-;; Copyright (C) 2013, Friedrich Paetzke <f.paetzke@gmail.com>
+;;; py-autopep8.el --- Use autopep8 to beautify a Python buffer
 
+;; Copyright (C) 2013-2014, Friedrich Paetzke <f.paetzke@gmail.com>
 
-(defun py--apply-rcs-patch (patch-buffer)
+;; Author: Friedrich Paetzke <f.paetzke@gmail.com>
+;; URL: https://github.com/paetzke/py-autopep8.el
+;; Version: 0.1
+
+;;; Commentary:
+
+;; Provides the `py-autopep8' command, which uses the external "autopep8"
+;; tool to tidy up the current buffer according to Python's PEP8.
+
+;; To automatically apply when saving a python file, use the
+;; following code:
+
+;;   (add-hook 'before-save-hook 'python-isort-before-save)
+
+;;; Code:
+
+(defun py-autopep8-apply-rcs-patch (patch-buffer)
   "Apply an RCS-formatted diff from PATCH-BUFFER to the current buffer."
   (let ((target-buffer (current-buffer))
         ;; Relative offset between buffer line numbers and line numbers
@@ -22,7 +37,7 @@
         (goto-char (point-min))
         (while (not (eobp))
           (unless (looking-at "^\\([ad]\\)\\([0-9]+\\) \\([0-9]+\\)")
-            (error "invalid rcs patch or internal error in py--apply-rcs-patch"))
+            (error "invalid rcs patch or internal error in py-autopep8-apply-rcs-patch"))
           (forward-line)
           (let ((action (match-string 1))
                 (from (string-to-number (match-string 2)))
@@ -44,10 +59,11 @@
                 (incf line-offset len)
                 (kill-whole-line len)))
              (t
-              (error "invalid rcs patch or internal error in py--apply-rcs-patch")))))))))
+              (error "invalid rcs patch or internal error in py-autopep8-apply-rcs-patch")))))))))
 
 
-(defun python-fmt ()
+;;;###autoload
+(defun py-autopep8 ()
   "Formats the current buffer according to the autopep8 tool."
   (interactive)
   (let ((tmpfile (make-temp-file "autopep8" nil ".py"))
@@ -66,7 +82,7 @@
             (progn
               (kill-buffer errbuf)
               (message "Buffer is already autopep8ed"))
-          (py--apply-rcs-patch patchbuf)
+          (py-autopep8-apply-rcs-patch patchbuf)
           (kill-buffer errbuf)
           (message "Applied autopep8"))
       (message "Could not apply autopep8. Check errors for details"))
@@ -74,9 +90,13 @@
     (delete-file tmpfile)))
 
 
-(defun python-fmt-before-save ()
+;;;###autoload
+(defun py-autopep8-before-save ()
   (interactive)
-  (when (eq major-mode 'python-mode) (python-fmt)))
+  (when (eq major-mode 'python-mode) (py-autopep8)))
 
 
 (provide 'py-autopep8)
+
+
+;;; py-autopep8.el ends here
