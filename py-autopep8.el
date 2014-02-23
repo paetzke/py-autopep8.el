@@ -14,7 +14,7 @@
 ;; To automatically apply when saving a python file, use the
 ;; following code:
 
-;;   (add-hook 'before-save-hook 'python-isort-before-save)
+;;   (add-hook 'before-save-hook 'py-autopep8-before-save)
 
 ;;; Code:
 
