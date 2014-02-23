@@ -3,7 +3,7 @@
 ;; Copyright (C) 2013, Friedrich Paetzke <f.paetzke@gmail.com>
 
 
-(defun py--apply-rcs-patch (patch-buffer)
+(defun py-autopep8-apply-rcs-patch (patch-buffer)
   "Apply an RCS-formatted diff from PATCH-BUFFER to the current buffer."
   (let ((target-buffer (current-buffer))
         ;; Relative offset between buffer line numbers and line numbers
@@ -22,7 +22,7 @@
         (goto-char (point-min))
         (while (not (eobp))
           (unless (looking-at "^\\([ad]\\)\\([0-9]+\\) \\([0-9]+\\)")
-            (error "invalid rcs patch or internal error in py--apply-rcs-patch"))
+            (error "invalid rcs patch or internal error in py-autopep8-apply-rcs-patch"))
           (forward-line)
           (let ((action (match-string 1))
                 (from (string-to-number (match-string 2)))
@@ -44,10 +44,10 @@
                 (incf line-offset len)
                 (kill-whole-line len)))
              (t
-              (error "invalid rcs patch or internal error in py--apply-rcs-patch")))))))))
+              (error "invalid rcs patch or internal error in py-autopep8-apply-rcs-patch")))))))))
 
 
-(defun python-fmt ()
+(defun py-autopep8 ()
   "Formats the current buffer according to the autopep8 tool."
   (interactive)
   (let ((tmpfile (make-temp-file "autopep8" nil ".py"))
@@ -66,7 +66,7 @@
             (progn
               (kill-buffer errbuf)
               (message "Buffer is already autopep8ed"))
-          (py--apply-rcs-patch patchbuf)
+          (py-autopep8-apply-rcs-patch patchbuf)
           (kill-buffer errbuf)
           (message "Applied autopep8"))
       (message "Could not apply autopep8. Check errors for details"))
@@ -74,9 +74,9 @@
     (delete-file tmpfile)))
 
 
-(defun python-fmt-before-save ()
+(defun py-autopep8-before-save ()
   (interactive)
-  (when (eq major-mode 'python-mode) (python-fmt)))
+  (when (eq major-mode 'python-mode) (py-autopep8)))
 
 
 (provide 'py-autopep8)

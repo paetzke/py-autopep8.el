@@ -17,7 +17,7 @@ Add the before-save-hook to your ~/.emacs
 #+BEGIN_SRC lisp
 (add-to-list 'load-path "/your/path/")
 (require 'py-autopep8)
-(add-hook 'before-save-hook 'python-fmt-before-save)
+(add-hook 'before-save-hook 'py-autopep8-before-save)
 #+END_SRC
 
 Now every time you save your Python file autopep8 will be executed on the current buffer.
