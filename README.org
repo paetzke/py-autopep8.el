@@ -5,7 +5,7 @@ All rights reserved.
 
 Provides the =py-autopep8= command, which uses the external =autopep8= tool to tidy up the current buffer according to Python's PEP8.
 
-Install autopep8 and download py-autopep8.el
+Install =autopep8= and download =py-autopep8.el=
 
 #+BEGIN_SRC bash
 $ pip install autopep8
@@ -18,6 +18,13 @@ Add the before-save-hook to your ~/.emacs
 (add-to-list 'load-path "/your/path/")
 (require 'py-autopep8)
 (add-hook 'before-save-hook 'py-autopep8-before-save)
+#+END_SRC
+
+You can also install py-autopep8 with MELPA:
+
+#+BEGIN_SRC lisp
+M-x package-install RET
+py-autopep8 RET
 #+END_SRC
 
 Now every time you save your Python file autopep8 will be executed on the current buffer.
