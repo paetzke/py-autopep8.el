@@ -4,7 +4,7 @@
 
 ;; Author: Friedrich Paetzke <f.paetzke@gmail.com>
 ;; URL: https://github.com/paetzke/py-autopep8.el
-;; Version: 0.1
+;; Version: 0.2
 
 ;;; Commentary:
 
