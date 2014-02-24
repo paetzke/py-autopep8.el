@@ -37,4 +37,11 @@ Thanks to:
 - Airead (https://github.com/Airead) for testing.
 
 
+** CHANGELOG
+
+
+*** 0.1
+- Renamed functions: This will break your code. See README for more information.
+
+
 [[https://bitdeli.com/free][https://d2weczhvl823v0.cloudfront.net/paetzke/py-autopep8.el/trend.png]]
