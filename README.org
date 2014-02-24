@@ -29,4 +29,12 @@ py-autopep8 RET
 
 Now every time you save your Python file autopep8 will be executed on the current buffer.
 
+
+** CREDITS
+
+Thanks to:
+
+- Airead (https://github.com/Airead) for testing.
+
+
 [[https://bitdeli.com/free][https://d2weczhvl823v0.cloudfront.net/paetzke/py-autopep8.el/trend.png]]
