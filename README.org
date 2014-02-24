@@ -29,4 +29,28 @@ py-autopep8 RET
 
 Now every time you save your Python file autopep8 will be executed on the current buffer.
 
+To customize the behaviour of "autopep8" you can set the py-autopep8-options e.g.
+
+#+BEGIN_SRC lisp
+(setq py-autopep8-options '("--max-line-length=100"))
+#+END_SRC
+
+
+** CREDITS
+
+Thanks to:
+
+- Airead (https://github.com/Airead) for testing.
+- Yasuyuki Oka (https://github.com/yasuyk) for committing a patch.
+
+
+** CHANGELOG
+
+*** 0.2
+- Added options to change =autopep8='s behaviour.
+
+*** 0.1
+- Renamed functions: This will break your code. See README for more information.
+
+
 [[https://bitdeli.com/free][https://d2weczhvl823v0.cloudfront.net/paetzke/py-autopep8.el/trend.png]]

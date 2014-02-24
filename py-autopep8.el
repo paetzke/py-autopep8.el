@@ -4,7 +4,7 @@
 
 ;; Author: Friedrich Paetzke <f.paetzke@gmail.com>
 ;; URL: https://github.com/paetzke/py-autopep8.el
-;; Version: 0.1
+;; Version: 0.2
 
 ;;; Commentary:
 
@@ -16,7 +16,26 @@
 
 ;;   (add-hook 'before-save-hook 'py-autopep8-before-save)
 
+;; To customize the behaviour of "autopep8" you can set the
+;; py-autopep8-options e.g.
+
+;;   (setq py-autopep8-options '("--max-line-length=100"))
+
 ;;; Code:
+
+(defgroup py-autopep8 nil
+  "Use autopep8 to beautify a Python buffer."
+  :group 'convenience
+  :prefix "py-autopep8-")
+
+
+(defcustom py-autopep8-options nil
+  "Options used for autopep8.
+
+Note that `--in-place' is used by default."
+  :group 'py-autopep8
+  :type '(repeat (string :tag "option")))
+
 
 (defun py-autopep8-apply-rcs-patch (patch-buffer)
   "Apply an RCS-formatted diff from PATCH-BUFFER to the current buffer."
@@ -77,7 +96,8 @@
     (with-current-buffer patchbuf
       (erase-buffer))
     (write-region nil nil tmpfile)
-    (if (zerop (call-process "autopep8" nil errbuf nil "--in-place" tmpfile))
+    (if (zerop (apply 'call-process "autopep8" nil errbuf nil
+                      (append `("--in-place" ,tmpfile) py-autopep8-options)))
         (if (zerop (call-process-region (point-min) (point-max) "diff" nil patchbuf nil "-n" "-" tmpfile))
             (progn
               (kill-buffer errbuf)

@@ -1,5 +1,0 @@
-* CREDITS
-
-Thanks to:
-
-- Airead (https://github.com/Airead) for testing

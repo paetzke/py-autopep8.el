@@ -1,4 +1,0 @@
-* CHANGELOG
-
-** 0.1
-- Renamed functions: This will break your code. See README for more information.
