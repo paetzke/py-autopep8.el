@@ -16,6 +16,11 @@
 
 ;;   (add-hook 'before-save-hook 'py-autopep8-before-save)
 
+;; To customize the behaviour of "autopep8" you can set the
+;; py-autopep8-options e.g.
+
+;;   (setq py-autopep8-options '("--max-line-length=100"))
+
 ;;; Code:
 
 (defgroup py-autopep8 nil
@@ -23,12 +28,14 @@
   :group 'convenience
   :prefix "py-autopep8-")
 
+
 (defcustom py-autopep8-options nil
   "Options used for autopep8.
 
 Note that `--in-place' is used by default."
   :group 'py-autopep8
   :type '(repeat (string :tag "option")))
+
 
 (defun py-autopep8-apply-rcs-patch (patch-buffer)
   "Apply an RCS-formatted diff from PATCH-BUFFER to the current buffer."
