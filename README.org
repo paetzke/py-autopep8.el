@@ -1,8 +1,5 @@
 * py-autopep8.el
 
-Copyright (c) 2013-2014, Friedrich Paetzke (f.paetzke@gmail.com)
-All rights reserved.
-
 Provides the =py-autopep8= command, which uses the external =autopep8= tool to tidy up the current buffer according to Python's PEP8.
 
 Install =autopep8= and download =py-autopep8.el=
@@ -50,7 +47,10 @@ Thanks to:
 - Added options to change =autopep8='s behaviour.
 
 *** 0.1
-- Renamed functions: This will break your code. See README for more information.
+- Renamed functions: This will break your code.
 
 
-[[https://bitdeli.com/free][https://d2weczhvl823v0.cloudfront.net/paetzke/py-autopep8.el/trend.png]]
+
+Copyright (c) 2013-2014, Friedrich Paetzke (paetzke@fastmail.fm)
+
+All rights reserved.
