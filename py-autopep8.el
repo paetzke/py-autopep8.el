@@ -85,6 +85,8 @@ Note that `--in-place' is used by default."
 (defun py-autopep8 ()
   "Formats the current buffer according to the autopep8 tool."
   (interactive)
+  (when (not (executable-find "autopep8"))
+    (error "\"autopep8\" command not found. Install autopep8 with \"pip install autopep8\""))
   (let ((tmpfile (make-temp-file "autopep8" nil ".py"))
         (patchbuf (get-buffer-create "*autopep8 patch*"))
         (errbuf (get-buffer-create "*autopep8 Errors*"))
@@ -105,7 +107,7 @@ Note that `--in-place' is used by default."
           (py-autopep8-apply-rcs-patch patchbuf)
           (kill-buffer errbuf)
           (message "Applied autopep8"))
-      (message "Could not apply autopep8. Check errors for details"))
+      (error "Could not apply autopep8. Check *autopep8 Errors* for details"))
     (kill-buffer patchbuf)
     (delete-file tmpfile)))
 
@@ -113,7 +115,9 @@ Note that `--in-place' is used by default."
 ;;;###autoload
 (defun py-autopep8-before-save ()
   (interactive)
-  (when (eq major-mode 'python-mode) (py-autopep8)))
+  (when (eq major-mode 'python-mode)
+    (condition-case err (py-autopep8)
+      (error (message "%s" (error-message-string err))))))
 
 
 (provide 'py-autopep8)
