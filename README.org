@@ -47,6 +47,9 @@ Thanks to:
 
 ** CHANGELOG
 
+*** 0.4
+- Replaced incf and decf.
+
 *** 0.3
 - Added check if =autopep8= executable is present.
 
