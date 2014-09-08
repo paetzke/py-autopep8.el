@@ -67,7 +67,7 @@ Note that `--in-place' is used by default."
                 (forward-line len)
                 (let ((text (buffer-substring start (point))))
                   (with-current-buffer target-buffer
-                    (setq line-offset (+ line-offset len))
+                    (setq line-offset (- line-offset len))
                     (goto-char (point-min))
                     (forward-line (- from len line-offset))
                     (insert text)))))
