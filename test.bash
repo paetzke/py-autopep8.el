@@ -24,7 +24,10 @@ function test_01 {
 
 
 function main {
-    install_emacs24
+    if [ "$TRAVIS" = "true" ]; then
+        install_emacs24
+    fi
+
     install_package
 
     test_01
