@@ -1,6 +1,7 @@
 * py-autopep8.el
 
 [[https://travis-ci.org/paetzke/py-autopep8.el][https://travis-ci.org/paetzke/py-autopep8.el.svg?branch=master]]
+[[http://melpa.org/#/py-autopep8][http://melpa.org/packages/py-autopep8-badge.svg]]
 
 Provides the =py-autopep8= command, which uses the external =autopep8= tool to tidy up the current buffer according to Python's PEP8.
 
