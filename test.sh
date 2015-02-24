@@ -18,12 +18,12 @@ on_error() {
 
 
 test_01() {
-    emacs --no-init-file --load py-autopep8.el -nw ./test_data/test_01_before.py \
+    emacs --no-init-file --load py-autopep8.el -nw ./test_data/test_01/before.py \
           -f py-autopep8-before-save \
           -f save-buffer \
           -f save-buffers-kill-terminal
 
-    diff ./test_data/test_01_before.py ./test_data/test_01_after.py
+    diff ./test_data/test_01/before.py ./test_data/test_01/after.py
     if [ $? != 0 ]; then
         on_error "test_01"
     fi
