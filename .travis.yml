@@ -3,4 +3,4 @@ python:
 - "3.4"
 install:
  - pip install autopep8
-script: ./test.bash
+script: ./test.sh
