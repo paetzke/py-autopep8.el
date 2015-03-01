@@ -1,0 +1,8 @@
+* CREDITS
+
+Thanks to:
+
+- Airead (https://github.com/Airead) for testing.
+- Fredrik Bergroth
+- Yasuyuki Oka (https://github.com/yasuyk) for committing a patch.
+- Didier Deshommes (https://github.com/dfdeshom) for committing a patch.

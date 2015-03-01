@@ -1,0 +1,19 @@
+* CHANGELOG
+
+** 0.6
+- Append autopep8 custom flags before file arguments so they don't get ignored.
+
+** 0.5
+- Fixed typo.
+
+** 0.4
+- Replaced incf and decf.
+
+** 0.3
+- Added check if =autopep8= executable is present.
+
+** 0.2
+- Added options to change =autopep8='s behaviour.
+
+** 0.1
+- Renamed functions: This will break your code.

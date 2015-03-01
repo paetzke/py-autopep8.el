@@ -35,34 +35,3 @@ To customize the behaviour of "autopep8" you can set the py-autopep8-options e.g
 #+BEGIN_SRC lisp
 (setq py-autopep8-options '("--max-line-length=100"))
 #+END_SRC
-
-
-** CREDITS
-
-Thanks to:
-
-- Airead (https://github.com/Airead) for testing.
-- Fredrik Bergroth
-- Yasuyuki Oka (https://github.com/yasuyk) for committing a patch.
-
-
-** CHANGELOG
-
-*** 0.5
-- Fixed typo.
-
-*** 0.4
-- Replaced incf and decf.
-
-*** 0.3
-- Added check if =autopep8= executable is present.
-
-*** 0.2
-- Added options to change =autopep8='s behaviour.
-
-*** 0.1
-- Renamed functions: This will break your code.
-
-
-
-Copyright (c) 2013-2014, Friedrich Paetzke (paetzke@fastmail.fm). All rights reserved.
