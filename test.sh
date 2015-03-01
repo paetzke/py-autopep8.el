@@ -18,7 +18,9 @@ on_error() {
 
 
 test_01() {
-    emacs --no-init-file --load py-autopep8.el -nw ./test_data/test_01/before.py \
+    emacs --no-init-file -nw \
+          --load py-autopep8.el \
+          ./test_data/test_01/before.py \
           -f py-autopep8-before-save \
           -f save-buffer \
           -f save-buffers-kill-terminal
@@ -31,6 +33,38 @@ test_01() {
 
 
 test_02() {
+    emacs --no-init-file -nw \
+          --load ./test_data/test_02/init.el  \
+          --load py-autopep8.el \
+          ./test_data/test_02/before.py \
+          -f py-autopep8-before-save \
+          -f save-buffer \
+          -f save-buffers-kill-terminal
+
+    diff ./test_data/test_02/before.py ./test_data/test_02/after.py
+    if [ $? != 0 ]; then
+        on_error "test_02"
+    fi
+}
+
+
+test_03() {
+    emacs --no-init-file -nw \
+          --load ./test_data/test_03/init.el  \
+          --load py-autopep8.el \
+          ./test_data/test_03/before.py \
+          -f py-autopep8-before-save \
+          -f save-buffer \
+          -f save-buffers-kill-terminal
+
+    diff ./test_data/test_03/before.py ./test_data/test_03/after.py
+    if [ $? != 0 ]; then
+        on_error "test_03"
+    fi
+}
+
+
+test_install_package() {
     emacs -nw py-autopep8.el -f package-install-from-buffer -f kill-emacs
 }
 
@@ -41,9 +75,11 @@ main() {
     fi
 
     test_01
+    test_02
+    test_03
 
     if [ "$TRAVIS" = "true" ]; then
-        test_02
+        test_install_package
     fi
 }
 

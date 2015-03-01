@@ -56,7 +56,7 @@ Note that `--in-place' is used by default."
         (goto-char (point-min))
         (while (not (eobp))
           (unless (looking-at "^\\([ad]\\)\\([0-9]+\\) \\([0-9]+\\)")
-            (error "invalid rcs patch or internal error in py-autopep8-apply-rcs-patch"))
+            (error "Invalid rcs patch or internal error in py-autopep8-apply-rcs-patch"))
           (forward-line)
           (let ((action (match-string 1))
                 (from (string-to-number (match-string 2)))
@@ -78,7 +78,7 @@ Note that `--in-place' is used by default."
                 (setq line-offset (+ line-offset len))
                 (kill-whole-line len)))
              (t
-              (error "invalid rcs patch or internal error in py-autopep8-apply-rcs-patch")))))))))
+              (error "Invalid rcs patch or internal error in py-autopep8-apply-rcs-patch")))))))))
 
 
 ;;;###autoload
@@ -86,7 +86,7 @@ Note that `--in-place' is used by default."
   "Formats the current buffer according to the autopep8 tool."
   (interactive)
   (when (not (executable-find "autopep8"))
-    (error "\"autopep8\" command not found. Install autopep8 with \"pip install autopep8\""))
+    (error "\"autopep8\" command not found.  Install autopep8 with \"pip install autopep8\""))
   (let ((tmpfile (make-temp-file "autopep8" nil ".py"))
         (patchbuf (get-buffer-create "*autopep8 patch*"))
         (errbuf (get-buffer-create "*autopep8 Errors*"))
@@ -99,7 +99,7 @@ Note that `--in-place' is used by default."
       (erase-buffer))
     (write-region nil nil tmpfile)
     (if (zerop (apply 'call-process "autopep8" nil errbuf nil
-                      (append `("--in-place" ,tmpfile) py-autopep8-options)))
+                      (append py-autopep8-options `("--in-place" ,tmpfile))))
         (if (zerop (call-process-region (point-min) (point-max) "diff" nil patchbuf nil "-n" "-" tmpfile))
             (progn
               (kill-buffer errbuf)
@@ -114,6 +114,7 @@ Note that `--in-place' is used by default."
 
 ;;;###autoload
 (defun py-autopep8-before-save ()
+  "Pre-save hooked to bse used before running py-autopep8."
   (interactive)
   (when (eq major-mode 'python-mode)
     (condition-case err (py-autopep8)
