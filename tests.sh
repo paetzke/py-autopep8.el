@@ -1,0 +1,78 @@
+#!/bin/bash -e
+
+TEST_FILE=/tmp/py-test-file.py
+
+
+install_emacs24() {
+    sudo add-apt-repository ppa:cassou/emacs -y
+    sudo apt-get update -y
+
+    sudo apt-get install emacs24 -y
+}
+
+
+test_01() {
+    rm $TEST_FILE || true
+    emacs --no-init-file -nw \
+          --load ./tests/tests.el \
+          --load py-autopep8.el \
+          ./tests/01/before.py \
+          -f py-autopep8-before-save \
+          -f write-test-file \
+          -f kill-emacs
+
+    diff $TEST_FILE ./tests/01/after.py
+}
+
+
+test_02() {
+    rm $TEST_FILE || true
+    emacs --no-init-file -nw \
+          --load ./tests/tests.el \
+          --load ./tests/02/init.el  \
+          --load py-autopep8.el \
+          ./tests/02/before.py \
+          -f py-autopep8-before-save \
+          -f write-test-file \
+          -f kill-emacs
+
+    diff $TEST_FILE ./tests/02/after.py
+}
+
+
+test_03() {
+    rm $TEST_FILE || true
+    emacs --no-init-file -nw \
+          --load ./tests/tests.el \
+          --load ./tests/03/init.el  \
+          --load py-autopep8.el \
+          ./tests/03/before.py \
+          -f py-autopep8-before-save \
+          -f write-test-file \
+          -f kill-emacs
+
+    diff $TEST_FILE ./tests/03/after.py
+}
+
+
+test_install_package() {
+    emacs --no-init-file -nw \
+          py-autopep8.el \
+          -f package-install-from-buffer \
+          -f kill-emacs
+}
+
+
+main() {
+    if [ "$TRAVIS" = "true" ]; then
+        install_emacs24
+        test_install_package
+    fi
+
+    test_01
+    test_02
+    test_03
+}
+
+
+main
