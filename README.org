@@ -16,9 +16,8 @@ $ wget http://git.vanneva.com/py-autopep8.el.git/blob_plain/HEAD:/py-autopep8.el
 Add the before-save-hook to your ~/.emacs
 
 #+BEGIN_SRC lisp
-(add-to-list 'load-path "/your/path/")
 (require 'py-autopep8)
-(add-hook 'before-save-hook 'py-autopep8-before-save)
+(add-hook 'python-mode-hook 'py-autopep8-enable-on-save)
 #+END_SRC
 
 You can also install py-autopep8 with MELPA:
