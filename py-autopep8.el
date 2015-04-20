@@ -14,7 +14,7 @@
 ;; To automatically apply when saving a python file, use the
 ;; following code:
 
-;;   (add-hook 'before-save-hook 'py-autopep8-before-save)
+;;   (add-hook 'python-mode-hook 'py-autopep8-enable-on-save)
 
 ;; To customize the behaviour of "autopep8" you can set the
 ;; py-autopep8-options e.g.
@@ -42,19 +42,27 @@ Note that `--in-place' is used by default."
                 (append py-autopep8-options `("--in-place", file)))))
 
 
+;;;###autoload
 (defun py-autopep8 ()
+  "Deprecated! Use py-autopep8-buffer instead."
+  (interactive)
+  (py-autopep8-buffer))
+
+
+;;;###autoload
+(defun py-autopep8-buffer ()
+  "Uses the \"autopep8\" tool to reformat the current buffer."
+  (interactive)
   (py-autopep8-bf--apply-executable-to-buffer "autopep8"
                                               'py-autopep8--call-executable
                                               nil))
 
 
 ;;;###autoload
-(defun py-autopep8-before-save ()
-  "Pre-save hooked to bse used before running py-autopep8."
+(defun py-autopep8-enable-on-save ()
+  "Pre-save hook to be used before running autopep8."
   (interactive)
-  (when (eq major-mode 'python-mode)
-    (condition-case err (py-autopep8)
-      (error (message "%s" (error-message-string err))))))
+  (add-hook 'before-save-hook 'py-autopep8-buffer nil t))
 
 
 ;; BEGIN GENERATED -----------------

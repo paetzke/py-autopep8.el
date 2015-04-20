@@ -17,7 +17,7 @@ test_01() {
           --load ./tests/tests.el \
           --load py-autopep8.el \
           ./tests/01/before.py \
-          -f py-autopep8-before-save \
+          -f py-autopep8-buffer \
           -f write-test-file \
           -f kill-emacs
 
@@ -33,7 +33,7 @@ test_02() {
           --load ./tests/02/init.el  \
           --load py-autopep8.el \
           ./tests/02/before.py \
-          -f py-autopep8-before-save \
+          -f py-autopep8-buffer \
           -f write-test-file \
           -f kill-emacs
 
@@ -49,7 +49,7 @@ test_03() {
           --load ./tests/03/init.el  \
           --load py-autopep8.el \
           ./tests/03/before.py \
-          -f py-autopep8-before-save \
+          -f py-autopep8-buffer \
           -f write-test-file \
           -f kill-emacs
 
@@ -64,11 +64,26 @@ test_04() {
           --load ./tests/tests.el \
           --load py-autopep8.el \
           ./tests/04/before.py \
-          -f py-autopep8-before-save \
+          -f py-autopep8-buffer \
           -f write-test-file \
           -f kill-emacs
 
     diff $TEST_FILE ./tests/04/after.py
+}
+
+
+test_05() {
+    echo $FUNCNAME
+    rm $TEST_FILE || true
+    emacs --no-init-file -nw \
+          --load ./tests/tests.el \
+          --load ./tests/05/init.el \
+          --load py-autopep8.el \
+          ./tests/05/before.py \
+          -f write-test-file \
+          -f kill-emacs
+
+    diff $TEST_FILE ./tests/05/after.py
 }
 
 
@@ -90,6 +105,7 @@ main() {
     test_02
     test_03
     test_04
+    test_05
 }
 
 
