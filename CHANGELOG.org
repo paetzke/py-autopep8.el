@@ -1,5 +1,13 @@
 * CHANGELOG
 
+** 0.7
+- Try to avoid =^M= by using the current buffer's coding system.
+- Deprecated =py-autopep8()=.
+  Use =py-autopep8-buffer()= instead.
+- Before save hook is set locally:
+  Replace =(add-hook 'before-save-hook 'py-autopep8-before-save)= with =(add-hook 'python-mode-hook 'py-autopep8-enable-on-save)=.
+  This will break your config.
+
 ** 0.6
 - Append autopep8 custom flags before file arguments so they don't get ignored.
 
