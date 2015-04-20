@@ -42,7 +42,17 @@ Note that `--in-place' is used by default."
                 (append py-autopep8-options `("--in-place", file)))))
 
 
+;;;###autoload
 (defun py-autopep8 ()
+  "Deprecated! Use py-autopep8-buffer instead."
+  (interactive)
+  (py-autopep8-buffer))
+
+
+;;;###autoload
+(defun py-autopep8-buffer ()
+  "Uses the \"autopep8\" tool to reformat the current buffer."
+  (interactive)
   (py-autopep8-bf--apply-executable-to-buffer "autopep8"
                                               'py-autopep8--call-executable
                                               nil))

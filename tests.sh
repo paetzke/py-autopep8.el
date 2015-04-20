@@ -17,7 +17,7 @@ test_01() {
           --load ./tests/tests.el \
           --load py-autopep8.el \
           ./tests/01/before.py \
-          -f py-autopep8-before-save \
+          -f py-autopep8-buffer \
           -f write-test-file \
           -f kill-emacs
 
@@ -33,7 +33,7 @@ test_02() {
           --load ./tests/02/init.el  \
           --load py-autopep8.el \
           ./tests/02/before.py \
-          -f py-autopep8-before-save \
+          -f py-autopep8-buffer \
           -f write-test-file \
           -f kill-emacs
 
@@ -49,7 +49,7 @@ test_03() {
           --load ./tests/03/init.el  \
           --load py-autopep8.el \
           ./tests/03/before.py \
-          -f py-autopep8-before-save \
+          -f py-autopep8-buffer \
           -f write-test-file \
           -f kill-emacs
 
@@ -64,7 +64,7 @@ test_04() {
           --load ./tests/tests.el \
           --load py-autopep8.el \
           ./tests/04/before.py \
-          -f py-autopep8-before-save \
+          -f py-autopep8-buffer \
           -f write-test-file \
           -f kill-emacs
 
