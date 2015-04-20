@@ -57,6 +57,21 @@ test_03() {
 }
 
 
+test_04() {
+    echo $FUNCNAME
+    rm $TEST_FILE || true
+    emacs --no-init-file -nw \
+          --load ./tests/tests.el \
+          --load py-autopep8.el \
+          ./tests/04/before.py \
+          -f py-autopep8-before-save \
+          -f write-test-file \
+          -f kill-emacs
+
+    diff $TEST_FILE ./tests/04/after.py
+}
+
+
 test_install_package() {
     emacs --no-init-file -nw \
           py-autopep8.el \
@@ -74,6 +89,7 @@ main() {
     test_01
     test_02
     test_03
+    test_04
 }
 
 
