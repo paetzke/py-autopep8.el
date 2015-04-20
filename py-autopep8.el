@@ -37,26 +37,45 @@ Note that `--in-place' is used by default."
   :type '(repeat (string :tag "option")))
 
 
-(defun py-autopep8-apply-rcs-patch (patch-buffer)
+(defun py-autopep8--call-executable (errbuf file)
+  (zerop (apply 'call-process "autopep8" nil errbuf nil
+                (append py-autopep8-options `("--in-place", file)))))
+
+
+(defun py-autopep8 ()
+  (py-autopep8-bf--apply-executable-to-buffer "autopep8"
+                                              'py-autopep8--call-executable
+                                              nil))
+
+
+;;;###autoload
+(defun py-autopep8-before-save ()
+  "Pre-save hooked to bse used before running py-autopep8."
+  (interactive)
+  (when (eq major-mode 'python-mode)
+    (condition-case err (py-autopep8)
+      (error (message "%s" (error-message-string err))))))
+
+
+;; BEGIN GENERATED -----------------
+;; !!! This file is generated !!!
+;; buftra.el
+;; Copyright (C) 2015, Friedrich Paetzke <paetzke@fastmail.fm>
+;; Author: Friedrich Paetzke <paetzke@fastmail.fm>
+;; URL: https://github.com/paetzke/buftra.el
+;; Version: 0.3
+
+
+(defun py-autopep8-bf--apply-rcs-patch (patch-buffer)
   "Apply an RCS-formatted diff from PATCH-BUFFER to the current buffer."
   (let ((target-buffer (current-buffer))
-        ;; Relative offset between buffer line numbers and line numbers
-        ;; in patch.
-        ;;
-        ;; Line numbers in the patch are based on the source file, so
-        ;; we have to keep an offset when making changes to the
-        ;; buffer.
-        ;;
-        ;; Appending lines decrements the offset (possibly making it
-        ;; negative), deleting lines increments it. This order
-        ;; simplifies the forward-line invocations.
         (line-offset 0))
     (save-excursion
       (with-current-buffer patch-buffer
         (goto-char (point-min))
         (while (not (eobp))
           (unless (looking-at "^\\([ad]\\)\\([0-9]+\\) \\([0-9]+\\)")
-            (error "Invalid rcs patch or internal error in py-autopep8-apply-rcs-patch"))
+            (error "invalid rcs patch or internal error in py-autopep8-bf--apply-rcs-patch"))
           (forward-line)
           (let ((action (match-string 1))
                 (from (string-to-number (match-string 2)))
@@ -78,47 +97,54 @@ Note that `--in-place' is used by default."
                 (setq line-offset (+ line-offset len))
                 (kill-whole-line len)))
              (t
-              (error "Invalid rcs patch or internal error in py-autopep8-apply-rcs-patch")))))))))
+              (error "invalid rcs patch or internal error in py-autopep8-bf-apply--rcs-patch")))))))))
 
 
-;;;###autoload
-(defun py-autopep8 ()
-  "Formats the current buffer according to the autopep8 tool."
-  (interactive)
-  (when (not (executable-find "autopep8"))
-    (error "\"autopep8\" command not found.  Install autopep8 with \"pip install autopep8\""))
-  (let ((tmpfile (make-temp-file "autopep8" nil ".py"))
-        (patchbuf (get-buffer-create "*autopep8 patch*"))
-        (errbuf (get-buffer-create "*autopep8 Errors*"))
-        (coding-system-for-read 'utf-8)
-        (coding-system-for-write 'utf-8))
+(defun py-autopep8-bf--replace-region (filename)
+  (delete-region (region-beginning) (region-end))
+  (insert-file-contents filename))
+
+
+(defun py-autopep8-bf--apply-executable-to-buffer (executable-name executable-call only-on-region)
+  "Formats the current buffer according to the executable"
+  (when (not (executable-find executable-name))
+    (error (format "%s command not found." executable-name)))
+  (let ((tmpfile (make-temp-file executable-name nil ".py"))
+        (patchbuf (get-buffer-create (format "*%s patch*" executable-name)))
+        (errbuf (get-buffer-create (format "*%s Errors*" executable-name)))
+        (coding-system-for-read buffer-file-coding-system)
+        (coding-system-for-write buffer-file-coding-system))
     (with-current-buffer errbuf
       (setq buffer-read-only nil)
       (erase-buffer))
     (with-current-buffer patchbuf
       (erase-buffer))
-    (write-region nil nil tmpfile)
-    (if (zerop (apply 'call-process "autopep8" nil errbuf nil
-                      (append py-autopep8-options `("--in-place" ,tmpfile))))
-        (if (zerop (call-process-region (point-min) (point-max) "diff" nil patchbuf nil "-n" "-" tmpfile))
+
+    (if (and only-on-region (use-region-p))
+        (write-region (region-beginning) (region-end) tmpfile)
+      (write-region nil nil tmpfile))
+
+    (if (funcall executable-call errbuf tmpfile)
+        (if (zerop (call-process-region (point-min) (point-max) "diff" nil
+                                        patchbuf nil "-n" "-" tmpfile))
             (progn
               (kill-buffer errbuf)
-              (message "Buffer is already autopep8ed"))
-          (py-autopep8-apply-rcs-patch patchbuf)
+              (message (format "Buffer is already %sed" executable-name)))
+
+          (if only-on-region
+              (py-autopep8-bf--replace-region tmpfile)
+            (py-autopep8-bf--apply-rcs-patch patchbuf))
+
           (kill-buffer errbuf)
-          (message "Applied autopep8"))
-      (error "Could not apply autopep8. Check *autopep8 Errors* for details"))
+          (message (format "Applied %s" executable-name)))
+      (error (format "Could not apply %s. Check *%s Errors* for details"
+                     executable-name executable-name)))
     (kill-buffer patchbuf)
     (delete-file tmpfile)))
 
 
-;;;###autoload
-(defun py-autopep8-before-save ()
-  "Pre-save hooked to bse used before running py-autopep8."
-  (interactive)
-  (when (eq major-mode 'python-mode)
-    (condition-case err (py-autopep8)
-      (error (message "%s" (error-message-string err))))))
+;; py-autopep8-bf.el ends here
+;; END GENERATED -------------------
 
 
 (provide 'py-autopep8)
