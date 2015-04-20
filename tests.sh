@@ -6,12 +6,12 @@ TEST_FILE=/tmp/py-test-file.py
 install_emacs24() {
     sudo add-apt-repository ppa:cassou/emacs -y
     sudo apt-get update -y
-
     sudo apt-get install emacs24 -y
 }
 
 
 test_01() {
+    echo $FUNCNAME
     rm $TEST_FILE || true
     emacs --no-init-file -nw \
           --load ./tests/tests.el \
@@ -26,6 +26,7 @@ test_01() {
 
 
 test_02() {
+    echo $FUNCNAME
     rm $TEST_FILE || true
     emacs --no-init-file -nw \
           --load ./tests/tests.el \
@@ -41,6 +42,7 @@ test_02() {
 
 
 test_03() {
+    echo $FUNCNAME
     rm $TEST_FILE || true
     emacs --no-init-file -nw \
           --load ./tests/tests.el \
