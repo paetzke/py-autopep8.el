@@ -1,10 +1,10 @@
 ;;; py-autopep8.el --- Use autopep8 to beautify a Python buffer
 
-;; Copyright (C) 2013-2015, Friedrich Paetzke <paetzke@fastmail.fm>
+;; Copyright (C) 2013-2015, Friedrich Paetzke <f.paetzke@gmail.com>
 
-;; Author: Friedrich Paetzke <paetzke@fastmail.fm>
+;; Author: Friedrich Paetzke <f.paetzke@gmail.com>
 ;; URL: http://paetzke.me/project/py-autopep8.el
-;; Version: 0.7
+;; Version: 0.8
 
 ;;; Commentary:
 
