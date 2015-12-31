@@ -55,7 +55,8 @@ Note that `--in-place' is used by default."
   (interactive)
   (py-autopep8-bf--apply-executable-to-buffer "autopep8"
                                               'py-autopep8--call-executable
-                                              nil))
+                                              nil
+                                              "py"))
 
 
 ;;;###autoload
@@ -71,7 +72,10 @@ Note that `--in-place' is used by default."
 ;; Copyright (C) 2015, Friedrich Paetzke <paetzke@fastmail.fm>
 ;; Author: Friedrich Paetzke <paetzke@fastmail.fm>
 ;; URL: https://github.com/paetzke/buftra.el
-;; Version: 0.3
+;; Version: 0.5
+
+;; This code is initially copied from go-mode.el (copyright the go-mode authors).
+;; See LICENSE or https://raw.githubusercontent.com/dominikh/go-mode.el/master/LICENSE
 
 
 (defun py-autopep8-bf--apply-rcs-patch (patch-buffer)
@@ -106,7 +110,7 @@ Note that `--in-place' is used by default."
                 (kill-whole-line len)
                 (pop kill-ring)))
              (t
-              (error "invalid rcs patch or internal error in py-autopep8-bf-apply--rcs-patch")))))))))
+              (error "invalid rcs patch or internal error in py-autopep8-bf--apply-rcs-patch")))))))))
 
 
 (defun py-autopep8-bf--replace-region (filename)
@@ -114,11 +118,14 @@ Note that `--in-place' is used by default."
   (insert-file-contents filename))
 
 
-(defun py-autopep8-bf--apply-executable-to-buffer (executable-name executable-call only-on-region)
+(defun py-autopep8-bf--apply-executable-to-buffer (executable-name
+                                           executable-call
+                                           only-on-region
+                                           file-extension)
   "Formats the current buffer according to the executable"
   (when (not (executable-find executable-name))
     (error (format "%s command not found." executable-name)))
-  (let ((tmpfile (make-temp-file executable-name nil ".py"))
+  (let ((tmpfile (make-temp-file executable-name nil (concat "." file-extension)))
         (patchbuf (get-buffer-create (format "*%s patch*" executable-name)))
         (errbuf (get-buffer-create (format "*%s Errors*" executable-name)))
         (coding-system-for-read buffer-file-coding-system)
