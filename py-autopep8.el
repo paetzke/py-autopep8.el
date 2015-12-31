@@ -103,7 +103,8 @@ Note that `--in-place' is used by default."
                 (goto-char (point-min))
                 (forward-line (- from line-offset 1))
                 (setq line-offset (+ line-offset len))
-                (kill-whole-line len)))
+                (kill-whole-line len)
+                (pop kill-ring)))
              (t
               (error "invalid rcs patch or internal error in py-autopep8-bf-apply--rcs-patch")))))))))
 
@@ -137,6 +138,7 @@ Note that `--in-place' is used by default."
                                         patchbuf nil "-n" "-" tmpfile))
             (progn
               (kill-buffer errbuf)
+              (pop kill-ring)
               (message (format "Buffer is already %sed" executable-name)))
 
           (if only-on-region
@@ -144,10 +146,12 @@ Note that `--in-place' is used by default."
             (py-autopep8-bf--apply-rcs-patch patchbuf))
 
           (kill-buffer errbuf)
+          (pop kill-ring)
           (message (format "Applied %s" executable-name)))
       (error (format "Could not apply %s. Check *%s Errors* for details"
                      executable-name executable-name)))
     (kill-buffer patchbuf)
+    (pop kill-ring)
     (delete-file tmpfile)))
 
 
