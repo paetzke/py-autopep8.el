@@ -1,5 +1,8 @@
 * CHANGELOG
 
+** Next
+- Avoid altering the killring.
+
 ** 0.7
 - Try to avoid =^M= by using the current buffer's coding system.
 - Deprecated =py-autopep8()=.
