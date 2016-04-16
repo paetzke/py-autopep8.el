@@ -145,7 +145,6 @@ Note that `--in-place' is used by default."
                                         patchbuf nil "-n" "-" tmpfile))
             (progn
               (kill-buffer errbuf)
-              (pop kill-ring)
               (message (format "Buffer is already %sed" executable-name)))
 
           (if only-on-region
@@ -153,12 +152,10 @@ Note that `--in-place' is used by default."
             (py-autopep8-bf--apply-rcs-patch patchbuf))
 
           (kill-buffer errbuf)
-          (pop kill-ring)
           (message (format "Applied %s" executable-name)))
       (error (format "Could not apply %s. Check *%s Errors* for details"
                      executable-name executable-name)))
     (kill-buffer patchbuf)
-    (pop kill-ring)
     (delete-file tmpfile)))
 
 
