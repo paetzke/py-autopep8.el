@@ -4,7 +4,7 @@
 
 ;; Author: Friedrich Paetzke <f.paetzke@gmail.com>
 ;; URL: http://paetzke.me/project/py-autopep8.el
-;; Version: 0.8
+;; Version: 2016.1
 
 ;;; Commentary:
 
