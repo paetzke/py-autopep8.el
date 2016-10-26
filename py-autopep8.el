@@ -63,7 +63,7 @@ Note that `--in-place' is used by default."
 (defun py-autopep8-enable-on-save ()
   "Pre-save hook to be used before running autopep8."
   (interactive)
-  (add-hook 'before-save-hook 'py-autopep8-buffer nil t))
+  (add-hook 'before-save-hook 'py-autopep8-buffer t t))
 
 
 ;; BEGIN GENERATED -----------------
