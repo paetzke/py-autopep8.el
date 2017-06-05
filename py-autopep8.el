@@ -60,10 +60,15 @@ Note that `--in-place' is used by default."
 
 
 ;;;###autoload
+;;; from elpa/py-autopep8/py-autopep9.el
 (defun py-autopep8-enable-on-save ()
-  "Pre-save hook to be used before running autopep8."
+  "Pre-save hook to be used before running autopep8. C-u removes this hook"
   (interactive)
-  (add-hook 'before-save-hook 'py-autopep8-buffer nil t))
+  (if current-prefix-arg
+      (progn
+        (remove-hook 'before-save-hook 'py-autopep8-buffer t)
+        (message "py-autopep8-buffer removed"))
+    (add-hook 'before-save-hook 'py-autopep8-buffer nil t)))
 
 
 ;; BEGIN GENERATED -----------------
