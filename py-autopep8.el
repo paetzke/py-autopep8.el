@@ -37,8 +37,14 @@ Note that `--in-place' is used by default."
   :type '(repeat (string :tag "option")))
 
 
+(defcustom py-autopep8-command "autopep8"
+  "The command used to invoke autopep8."
+  :group 'py-autopep8
+  :type 'string)
+
+
 (defun py-autopep8--call-executable (errbuf file)
-  (zerop (apply 'call-process "autopep8" nil errbuf nil
+  (zerop (apply 'call-process py-autopep8-command nil errbuf nil
                 (append py-autopep8-options `("--in-place", file)))))
 
 
@@ -53,7 +59,7 @@ Note that `--in-place' is used by default."
 (defun py-autopep8-buffer ()
   "Uses the \"autopep8\" tool to reformat the current buffer."
   (interactive)
-  (py-autopep8-bf--apply-executable-to-buffer "autopep8"
+  (py-autopep8-bf--apply-executable-to-buffer py-autopep8-command
                                               'py-autopep8--call-executable
                                               nil
                                               "py"))
