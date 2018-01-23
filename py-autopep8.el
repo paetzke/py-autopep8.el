@@ -9,7 +9,7 @@
 ;;; Commentary:
 
 ;; Provides the `py-autopep8' command, which uses the external "autopep8"
-;; tool to tidy up the current buffer according to Python's PEP8.
+;; tool to tidy up the current buffer or region according to Python's PEP8.
 
 ;; To automatically apply when saving a python file, use the
 ;; following code:
@@ -56,6 +56,16 @@ Note that `--in-place' is used by default."
   (py-autopep8-bf--apply-executable-to-buffer "autopep8"
                                               'py-autopep8--call-executable
                                               nil
+                                              "py"))
+
+
+;;;###autoload
+(defun py-autopep8-region ()
+  "Uses the \"autopep8\" tool to reformat the active region."
+  (interactive)
+  (py-autopep8-bf--apply-executable-to-buffer "autopep8"
+                                              'py-autopep8--call-executable
+                                              t
                                               "py"))
 
 
