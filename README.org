@@ -40,6 +40,8 @@ To customize the behaviour of =autopep8= you can set the =py-autopep8-options= e
 
 =M-x py-autopep8-buffer=: Uses the =autopep8= tool to reformat the current buffer.
 
+=M-x py-autopep8-region=: Uses the =autopep8= tool to reformat the active region.
+
 
 ** Bugs and improvements
 
