@@ -2,110 +2,49 @@
 
 TEST_FILE=/tmp/py-test-file.py
 
+# Run the test:
+# - First argument is test folder
+# - Second argument defines whether or not
+# py-autopep8-buffer should be called
+test_autopep() {
+  echo $FUNCNAME $1
+  rm -f $TEST_FILE
 
-install_emacs24() {
-    sudo add-apt-repository ppa:cassou/emacs -y
-    sudo apt-get update -y
-    sudo apt-get install emacs24 -y
+	if [[ -f ./tests/$1/init.el ]]; then
+		load_init_file="--load ./tests/$1/init.el"
+	fi
+
+	if [ "$2" = true ]; then
+		call_autopep8="-f py-autopep8-buffer"
+	fi
+
+  emacs --batch \
+        --load py-autopep8.el \
+        $load_init_file \
+        ./tests/$1/before.py \
+        $call_autopep8 \
+        --eval "(write-file \"$TEST_FILE\")" \
+
+  diff $TEST_FILE ./tests/$1/after.py
 }
 
 
-test_01() {
-    echo $FUNCNAME
-    rm $TEST_FILE || true
-    emacs --no-init-file -nw \
-          --load ./tests/tests.el \
-          --load py-autopep8.el \
-          ./tests/01/before.py \
-          -f py-autopep8-buffer \
-          -f write-test-file \
-          -f kill-emacs
 
-    diff $TEST_FILE ./tests/01/after.py
-}
-
-
-test_02() {
-    echo $FUNCNAME
-    rm $TEST_FILE || true
-    emacs --no-init-file -nw \
-          --load ./tests/tests.el \
-          --load ./tests/02/init.el  \
-          --load py-autopep8.el \
-          ./tests/02/before.py \
-          -f py-autopep8-buffer \
-          -f write-test-file \
-          -f kill-emacs
-
-    diff $TEST_FILE ./tests/02/after.py
-}
-
-
-test_03() {
-    echo $FUNCNAME
-    rm $TEST_FILE || true
-    emacs --no-init-file -nw \
-          --load ./tests/tests.el \
-          --load ./tests/03/init.el  \
-          --load py-autopep8.el \
-          ./tests/03/before.py \
-          -f py-autopep8-buffer \
-          -f write-test-file \
-          -f kill-emacs
-
-    diff $TEST_FILE ./tests/03/after.py
-}
-
-
-test_04() {
-    echo $FUNCNAME
-    rm $TEST_FILE || true
-    emacs --no-init-file -nw \
-          --load ./tests/tests.el \
-          --load py-autopep8.el \
-          ./tests/04/before.py \
-          -f py-autopep8-buffer \
-          -f write-test-file \
-          -f kill-emacs
-
-    diff $TEST_FILE ./tests/04/after.py
-}
-
-
-test_05() {
-    echo $FUNCNAME
-    rm $TEST_FILE || true
-    emacs --no-init-file -nw \
-          --load ./tests/tests.el \
-          --load ./tests/05/init.el \
-          --load py-autopep8.el \
-          ./tests/05/before.py \
-          -f write-test-file \
-          -f kill-emacs
-
-    diff $TEST_FILE ./tests/05/after.py
-}
-
-
+# The package won't actually be installed
+# in the user distribution because we are using --batch
 test_install_package() {
-    emacs --no-init-file -nw \
-          py-autopep8.el \
-          -f package-install-from-buffer \
-          -f kill-emacs
+  emacs --batch py-autopep8.el -f package-install-from-buffer
 }
 
 
 main() {
-    if [ "$TRAVIS" = "true" ]; then
-        install_emacs24
-        test_install_package
-    fi
+  test_install_package
 
-    test_01
-    test_02
-    test_03
-    test_04
-    test_05
+	for i in {1..4}; do
+		test_autopep 0$i true
+	done
+
+	test_autopep 0$i false
 }
 
 
