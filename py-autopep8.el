@@ -60,6 +60,16 @@ Note that `--in-place' is used by default."
 
 
 ;;;###autoload
+(defun py-autopep8-region ()
+  "Uses the \"autopep8\" tool to reformat the buffer's active region."
+  (interactive)
+  (py-autopep8-bf--apply-executable-to-buffer "autopep8"
+                                              'py-autopep8--call-executable
+                                              t
+                                              "py"))
+
+
+;;;###autoload
 (defun py-autopep8-enable-on-save ()
   "Pre-save hook to be used before running autopep8."
   (interactive)
@@ -119,9 +129,9 @@ Note that `--in-place' is used by default."
 
 
 (defun py-autopep8-bf--apply-executable-to-buffer (executable-name
-                                           executable-call
-                                           only-on-region
-                                           file-extension)
+                                                   executable-call
+                                                   only-on-region
+                                                   file-extension)
   "Formats the current buffer according to the executable"
   (when (not (executable-find executable-name))
     (error (format "%s command not found." executable-name)))
