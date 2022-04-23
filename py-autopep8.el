@@ -55,7 +55,6 @@ Note that `--in-place' is used by default."
   (interactive)
   (py-autopep8-bf--apply-executable-to-buffer "autopep8"
                                               'py-autopep8--call-executable
-                                              nil
                                               "py"))
 
 
@@ -120,7 +119,6 @@ Note that `--in-place' is used by default."
 
 (defun py-autopep8-bf--apply-executable-to-buffer (executable-name
                                            executable-call
-                                           only-on-region
                                            file-extension)
   "Formats the current buffer according to the executable"
   (when (not (executable-find executable-name))
@@ -136,9 +134,7 @@ Note that `--in-place' is used by default."
     (with-current-buffer patchbuf
       (erase-buffer))
 
-    (if (and only-on-region (use-region-p))
-        (write-region (region-beginning) (region-end) tmpfile)
-      (write-region nil nil tmpfile))
+    (write-region nil nil tmpfile)
 
     (if (funcall executable-call errbuf tmpfile)
         (if (zerop (call-process-region (point-min) (point-max) "diff" nil
@@ -147,9 +143,7 @@ Note that `--in-place' is used by default."
               (kill-buffer errbuf)
               (message (format "Buffer is already %sed" executable-name)))
 
-          (if only-on-region
-              (py-autopep8-bf--replace-region tmpfile)
-            (py-autopep8-bf--apply-rcs-patch patchbuf))
+          (py-autopep8-bf--apply-rcs-patch patchbuf)
 
           (kill-buffer errbuf)
           (message (format "Applied %s" executable-name)))
