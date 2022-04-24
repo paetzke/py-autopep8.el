@@ -20,11 +20,16 @@ Use the package (available in MELPA) and add the before-save-hook to your =~/.em
 
 Now every time you save your Python file autopep8 will be executed on the current buffer.
 
-To customize the behaviour of =autopep8= you can set the =py-autopep8-options= e.g.
+** Configuration
+
+To customize the behavior of =autopep8= you can set the =py-autopep8-options= e.g.
 
 #+BEGIN_SRC lisp
 (setq py-autopep8-options '("--max-line-length=100"))
 #+END_SRC
+
+=autopep8-command=: can be used to point to the location of the =autopep8= command
+(otherwise =autopep8= from the =PATH= will be used).
 
 
 ** Functions

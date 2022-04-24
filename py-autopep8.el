@@ -33,13 +33,17 @@
   "Use autopep8 to beautify a Python buffer."
   :group 'convenience)
 
+(defcustom py-autopep8-command "autopep8"
+  "The location of the autopep8 command (otherwise find in PATH)."
+  :group 'py-autopep8
+  :type 'string)
+
 (defcustom py-autopep8-options nil
   "Options used for autopep8.
 
 Note that `-' and '--exit-code' are used by default."
   :group 'py-autopep8
   :type '(repeat (string :tag "option")))
-
 
 ;; ---------------------------------------------------------------------------
 ;; Internal Functions
@@ -54,14 +58,14 @@ Note that `-' and '--exit-code' are used by default."
         ,@body)
       (advice-remove ,fn-orig fn-advice-var))))
 
-(defun py-autopep8--apply-executable-to-buffer (executable-name)
-  "Formats the current buffer according to EXECUTABLE-NAME."
-  (when (not (executable-find executable-name))
-    (user-error (format "%s command not found." executable-name)))
+(defun py-autopep8--apply-executable-to-buffer ()
+  "Formats the current buffer."
+  (when (not (executable-find py-autopep8-command))
+    (user-error (format "%s command not found." py-autopep8-command)))
 
   ;; Set the default coding for the temporary buffers.
   (let ((sentinel-called nil)
-        (command-with-args (append (list executable-name)
+        (command-with-args (append (list py-autopep8-command)
                                    py-autopep8-options
                                    (list "-" "--exit-code")))
         (this-buffer (current-buffer))
@@ -129,7 +133,7 @@ Note that `-' and '--exit-code' are used by default."
 (defun py-autopep8-buffer ()
   "Use the \"autopep8\" tool to reformat the current buffer."
   (interactive)
-  (py-autopep8--apply-executable-to-buffer "autopep8")
+  (py-autopep8--apply-executable-to-buffer)
   ;; Always return nil, continue to save.
   nil)
 
