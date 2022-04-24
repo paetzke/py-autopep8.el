@@ -48,18 +48,8 @@ Note that `-' and '--exit-code' are used by default."
 ;; ---------------------------------------------------------------------------
 ;; Internal Functions
 
-(defmacro py-autopep8--with-advice (fn-orig where fn-advice &rest body)
-  "Execute BODY with WHERE advice on FN-ORIG temporarily enabled."
-  `
-  (let ((fn-advice-var ,fn-advice))
-    (unwind-protect
-      (progn
-        (advice-add ,fn-orig ,where fn-advice-var)
-        ,@body)
-      (advice-remove ,fn-orig fn-advice-var))))
-
-(defun py-autopep8--apply-executable-to-buffer ()
-  "Formats the current buffer."
+(defun py-autopep8--buffer-format-impl (stdout-buffer stderr-buffer)
+  "Format current buffer using temporary STDOUT-BUFFER and STDERR-BUFFER."
   (when (not (executable-find py-autopep8-command))
     (user-error (format "%s command not found." py-autopep8-command)))
 
@@ -68,63 +58,70 @@ Note that `-' and '--exit-code' are used by default."
         (command-with-args (append (list py-autopep8-command)
                                    py-autopep8-options
                                    (list "-" "--exit-code")))
-        (this-buffer (current-buffer))
         (this-buffer-coding buffer-file-coding-system)
-        (stderr-buffer nil)
+        (stderr-as-string nil)
 
         ;; Set this for `make-process' as there are no files for autopep8
         ;; to use to detect where to read local configuration from,
         ;; it's important the current directory is used to look this up.
         (default-directory (file-name-directory (buffer-file-name))))
 
+    (let ((proc
+           (make-process
+            :name "autopep8-proc"
+            :buffer stdout-buffer
+            :stderr stderr-buffer
+            :coding (cons this-buffer-coding this-buffer-coding)
+            :connection-type 'pipe
+            :command command-with-args
+            :sentinel
+            (lambda (_proc _msg)
+              (setq sentinel-called t)
+
+              ;; Assign in the sentinel to prevent "Process .. finished"
+              ;; being written to `stderr-buffer' otherwise it's difficult
+              ;; to know if there was an error or not since an exit value
+              ;; of 2 may be used for invalid arguments as well as to check
+              ;; if the buffer was re-formatted.
+              (unless (zerop (buffer-size stderr-buffer))
+                (with-current-buffer stderr-buffer
+                  (setq stderr-as-string (buffer-string))
+                  (erase-buffer)))))))
+
+      (process-send-region proc (point-min) (point-max))
+      (process-send-eof proc)
+
+      (while (not sentinel-called)
+        (accept-process-output))
+
+      (let ((exit-code (process-exit-status proc)))
+        (cond
+         ((eq exit-code 0)
+          ;; No difference.
+          nil)
+         ((or (not (eq exit-code 2)) stderr-as-string)
+          (unless stderr-as-string
+            (message "py-autopep8: error output\n%s"
+                     (with-current-buffer stderr-buffer
+                       (buffer-string))))
+          (message "py-autopep8: Command %S failed with exit code %d!"
+                   command-with-args exit-code)
+          nil)
+         (t
+          (replace-buffer-contents stdout-buffer)
+          t))))))
+
+(defun py-autopep8--buffer-format ()
+  "Format the current buffer."
+  (let ((stdout-buffer nil)
+        (stderr-buffer nil)
+        (this-buffer (current-buffer)))
     (with-temp-buffer
-      (setq stderr-buffer (current-buffer))
+      (setq stdout-buffer (current-buffer))
       (with-temp-buffer
-        ;; Needed to prevent "Process .. finished" being written to
-        ;; `stderr-buffer' otherwise it's difficult to know if there was an
-        ;; error or not since an exit value of 2 may be used for invalid
-        ;; arguments as well as to check if the buffer was re-formatted.
-        (py-autopep8--with-advice
-         'internal-default-process-sentinel :override #'ignore
-
-         (let ((proc (make-process
-                      :name "autopep8-proc"
-                      :buffer (current-buffer)
-                      :coding (cons this-buffer-coding this-buffer-coding)
-                      :stderr stderr-buffer
-                      :connection-type 'pipe
-                      :command command-with-args
-                      :sentinel (lambda (_proc _msg)
-                                  (setq sentinel-called t)))))
-
-           (with-current-buffer this-buffer
-             (process-send-region proc (point-min) (point-max)))
-           (process-send-eof proc)
-
-           (while (not sentinel-called)
-             (accept-process-output))
-
-           (let ((exit-code (process-exit-status proc)))
-             (cond
-              ((eq exit-code 0)
-               ;; No difference.
-               nil)
-              ((not (and (eq exit-code 2)
-                         (zerop (buffer-size stderr-buffer))))
-               (unless (zerop (buffer-size stderr-buffer))
-                 (message "py-autopep8: error output\n%s"
-                          (with-current-buffer stderr-buffer
-                            (buffer-string))))
-               (message "py-autopep8: Command %S failed with exit code %d!"
-                           command-with-args exit-code)
-               nil)
-              (t
-               (let ((temp-buffer (current-buffer)))
-                 (with-current-buffer this-buffer
-                   (replace-buffer-contents temp-buffer)))
-
-               t)))))))))
-
+        (setq stderr-buffer (current-buffer))
+        (with-current-buffer this-buffer
+          (py-autopep8--buffer-format-impl stdout-buffer stderr-buffer))))))
 
 ;; ---------------------------------------------------------------------------
 ;; Public Functions
@@ -133,7 +130,7 @@ Note that `-' and '--exit-code' are used by default."
 (defun py-autopep8-buffer ()
   "Use the \"autopep8\" tool to reformat the current buffer."
   (interactive)
-  (py-autopep8--apply-executable-to-buffer)
+  (py-autopep8--buffer-format)
   ;; Always return nil, continue to save.
   nil)
 
