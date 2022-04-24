@@ -21,7 +21,7 @@ test_01() {
           -f write-test-file \
           -f kill-emacs
 
-    diff $TEST_FILE ./tests/01/after.py
+    diff -u $TEST_FILE ./tests/01/after.py
 }
 
 
@@ -37,7 +37,7 @@ test_02() {
           -f write-test-file \
           -f kill-emacs
 
-    diff $TEST_FILE ./tests/02/after.py
+    diff -u $TEST_FILE ./tests/02/after.py
 }
 
 
@@ -53,7 +53,7 @@ test_03() {
           -f write-test-file \
           -f kill-emacs
 
-    diff $TEST_FILE ./tests/03/after.py
+    diff -u $TEST_FILE ./tests/03/after.py
 }
 
 
@@ -68,7 +68,7 @@ test_04() {
           -f write-test-file \
           -f kill-emacs
 
-    diff $TEST_FILE ./tests/04/after.py
+    diff -u $TEST_FILE ./tests/04/after.py
 }
 
 
@@ -83,7 +83,7 @@ test_05() {
           -f write-test-file \
           -f kill-emacs
 
-    diff $TEST_FILE ./tests/05/after.py
+    diff -u $TEST_FILE ./tests/05/after.py
 }
 
 
