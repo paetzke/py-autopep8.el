@@ -66,7 +66,12 @@ Note that `-' and '--exit-code' are used by default."
                                    (list "-" "--exit-code")))
         (this-buffer (current-buffer))
         (this-buffer-coding buffer-file-coding-system)
-        (stderr-buffer nil))
+        (stderr-buffer nil)
+
+        ;; Set this for `make-process' as there are no files for autopep8
+        ;; to use to detect where to read local configuration from,
+        ;; it's important the current directory is used to look this up.
+        (default-directory (file-name-directory (buffer-file-name))))
 
     (with-temp-buffer
       (setq stderr-buffer (current-buffer))
